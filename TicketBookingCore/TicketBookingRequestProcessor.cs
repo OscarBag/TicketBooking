@@ -1,11 +1,13 @@
-﻿namespace TicketBookingCore
+﻿using System.Runtime.InteropServices;
+
+namespace TicketBookingCore
 {
     public class TicketBookingRequestProcessor
     {
-        private readonly ITicketBookingRepository _iTicket;
+        private readonly ITicketBookingRepository _Ticket;
         public TicketBookingRequestProcessor(ITicketBookingRepository ticketBookingRepository)
         {
-            _iTicket = ticketBookingRepository;
+            _Ticket = ticketBookingRepository;
         }
 
         public TicketBookingResponse Book(TicketBookingRequest request)
@@ -15,22 +17,12 @@
                 throw new ArgumentNullException(nameof(request));
             }
 
-            _iTicket.Save(new TicketBooking
-            {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Email = request.Email
-            }
-            );
+            _Ticket.Save(TicketBookingSupport.Create<TicketBooking>(request));
 
-            return new TicketBookingResponse
-            { 
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Email = request.Email 
-            
-            };
+            return TicketBookingSupport.Create<TicketBookingResponse>(request);
 
         }
+
+
     }
 }
