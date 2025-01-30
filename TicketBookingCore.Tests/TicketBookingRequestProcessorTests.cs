@@ -48,8 +48,14 @@ namespace TicketBookingCore.Tests
         public void ShouldSaveToDatabase()
         {
             //Arrange
+            TicketBooking savedTicketBooking = null;
 
-            //Act
+            _ticketBookingRepositoryMock.Setup(x => x.Save(It.IsAny<TicketBooking>()))
+            .Callback<TicketBooking>((ticketBooking) =>
+            {
+                savedTicketBooking = ticketBooking;
+            });
+
             var request = new TicketBookingRequest
             {
                 FirstName = "Oscar",
@@ -57,8 +63,14 @@ namespace TicketBookingCore.Tests
                 Email = "oscar@email.com"
             };
 
-            //Assert
+            //Act
             TicketBookingResponse response = _processor.Book(request);
+
+            //Assert
+            Assert.NotNull(savedTicketBooking);
+            Assert.Equal(request.FirstName, savedTicketBooking.FirstName);
+            Assert.Equal(request.LastName, savedTicketBooking.LastName);
+            Assert.Equal(request.Email, savedTicketBooking.Email);
         }
     }
 }
