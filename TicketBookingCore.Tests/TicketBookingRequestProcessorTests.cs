@@ -1,13 +1,16 @@
+using Moq;
 using System.ComponentModel.DataAnnotations;
 
 namespace TicketBookingCore.Tests
 {
     public class TicketBookingRequestProcessorTests
     {
-        public readonly TicketBookingRequestProcessor _processor;
+        private readonly Mock<ITicketBookingRepository> _ticketBookingRepositoryMock;
+        private readonly TicketBookingRequestProcessor _processor;
         public TicketBookingRequestProcessorTests()
         {
-            _processor = new TicketBookingRequestProcessor();
+            _ticketBookingRepositoryMock = new Mock<ITicketBookingRepository>();
+            _processor = new TicketBookingRequestProcessor(_ticketBookingRepositoryMock.Object);
         }
         
 
@@ -39,6 +42,23 @@ namespace TicketBookingCore.Tests
 
             //Assert
             Assert.Equal("request", exception.ParamName);    
+        }
+
+        [Fact]
+        public void ShouldSaveToDatabase()
+        {
+            //Arrange
+
+            //Act
+            var request = new TicketBookingRequest
+            {
+                FirstName = "Oscar",
+                LastName = "Bagler",
+                Email = "oscar@email.com"
+            };
+
+            //Assert
+            TicketBookingResponse response = _processor.Book(request);
         }
     }
 }

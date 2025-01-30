@@ -2,7 +2,7 @@
 {
     public class TicketBookingRequestProcessor
     {
-        public TicketBookingRequestProcessor()
+        public TicketBookingRequestProcessor(ITicketBookingRepository ticketBookingRepository)
         {
 
         }
@@ -13,6 +13,7 @@
             {
                 throw new ArgumentNullException(nameof(request));
             }
+
             return new TicketBookingResponse
             { 
                 FirstName = request.FirstName,
